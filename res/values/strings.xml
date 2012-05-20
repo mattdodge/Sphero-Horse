@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sphero Horse</string>
+    <string name="player1NameHint">Enter Player 1\'s Name</string>
+    <string name="player2NameHint">Enter Player 2\'s Name</string>
+    <string name="player1Name">Barack Obama</string>
+    <string name="player2Name">Mitt Romney</string>
+    <string name="gameText">game text goes here</string>
+    <string name="timerText">00:45.314</string>
+    <string name="selectSpheroInstructions">Select a Sphero from the list below, then click Make Driver or Make Target to assign its role. You need to have 2 Spheros paired to play this game. Go to bluetooth settings if you need to pair.</string>
+
+</resources>

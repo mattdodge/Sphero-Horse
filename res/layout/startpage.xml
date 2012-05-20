@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ImageView
+        android:id="@+id/spheroHorseLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"
+        android:src="@drawable/sphero_horse_logo"
+        android:layout_alignParentTop="true" />
+
+    <EditText
+        android:id="@+id/player1NameText"
+        style="@style/EnterNameText"
+		android:hint="@string/player1NameHint"
+		android:layout_below="@+id/spheroHorseLogo"
+    >
+
+        <requestFocus />
+    </EditText>
+    
+    <EditText
+        android:id="@+id/player2NameText"
+        style="@style/EnterNameText"
+        android:hint="@string/player2NameHint"
+        android:layout_below="@+id/player1NameText"
+    />
+    
+    <TextView 
+        android:id="@+id/selectSpheroInstructions"
+        style="@style/selectSpheroInstructions"
+        android:text="@string/selectSpheroInstructions"
+        android:layout_below="@+id/player2NameText" />
+
+    <LinearLayout
+        android:id="@+id/robotChooseLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/selectSpheroInstructions"
+     >
+        
+        <ListView
+	        android:id="@+id/spheroList"
+	        android:layout_weight="1"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:choiceMode="singleChoice"
+	        android:cacheColorHint="#00000000"
+	         >
+	    </ListView>
+        
+         <LinearLayout
+	        android:layout_weight="1"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical" >
+	        
+            <Button
+		        android:id="@+id/choose_driver_button"
+		        android:text="Make Driver"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:onClick="onChooseDriverClick"
+		        android:visibility="gone"
+		        />
+            
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+				  android:id="@+id/driverText"
+				  style="@style/selectedRobotText"
+				  android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:text="Driver: Sphero-RGB"
+				  
+				  />
+		
+		    <Button
+		        android:id="@+id/choose_target_button"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:onClick="onChooseTargetClick"
+		        android:text="Make Target" />
+             
+		    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+				  android:id="@+id/targetText"
+				  style="@style/selectedRobotText"
+				  android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:text="Target: "
+				  android:visibility="gone"/>
+	    </LinearLayout>
+        
+    </LinearLayout>
+
+    
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onStartClick"
+        android:text="Start Game!"
+        android:layout_below="@+id/robotChooseLay"
+        android:visibility="gone" />
+   
+
+    <com.orbotix.horse.TransparentPanel
+        android:id="@+id/transparentPanel1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone" >
+    </com.orbotix.horse.TransparentPanel>
+    
+    <ProgressBar
+  	    android:id="@+id/progressBar1"
+  	    style="?android:attr/progressBarStyleLarge"
+  	    android:layout_width="200dp"
+  	    android:layout_height="200dp"
+  	    android:layout_centerInParent="true" 
+  	    android:visibility="gone"
+  	    />
+
+
+    
+</RelativeLayout>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.orbotix.horse"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ff222222" >
+
+    <orbotix.robot.widgets.calibration.CalibrationView
+        android:id="@+id/calibration"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+    />
+
+    <LinearLayout
+       android:id="@+id/linLay2"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:paddingBottom="10dp" >
+        
+        <ImageView
+            android:id="@+id/horseOnly"
+            android:contentDescription="picture of horse"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/horse_only" />
+        
+         <TextView
+             android:id="@+id/gameText"
+             style="@style/gameTextStyle"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:gravity="center_vertical|center_horizontal"
+             android:text="@string/gameText"
+             android:visibility="gone" />
+
+         <TextView
+             android:id="@+id/timer"
+             style="@style/timerStyle"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:gravity="center_vertical|center_horizontal"
+             android:text="@string/timerText" />
+        
+       </LinearLayout>
+		        
+       <TextView
+           android:id="@+id/player1Name"
+           style="@style/nameStyle"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@id/linLay2"
+           android:layout_gravity="left"
+           android:paddingLeft="10dp"
+           android:text="@string/player1Name" />
+	        
+	        <ImageView
+	            android:id="@+id/player1Score"
+	            android:contentDescription="sphero score p1"
+	            android:layout_width="500dp"
+	            android:layout_height="150dp"
+	            android:layout_below="@+id/player1Name"
+	            android:layout_centerHorizontal="true"
+	            android:adjustViewBounds="true"
+	            android:scaleType="center"
+	            android:src="@drawable/score_none_01" />
+	        
+	        <ImageView
+	            android:id="@+id/player2Score"
+	            android:contentDescription="sphero score p2"
+	            android:layout_width="500dp"
+	            android:layout_height="150dp"
+	            android:layout_below="@+id/player1Name"
+	            android:layout_centerHorizontal="true"
+	            android:layout_marginTop="200dp"
+	            android:adjustViewBounds="true"
+	            android:scaleType="center"
+	            android:src="@drawable/score_none_02" />
+	        
+	        <TextView
+		        android:id="@+id/player2Name"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="right"
+		        android:paddingRight="10dp"
+		        style="@style/nameStyle"
+		        android:text="@string/player2Name"
+		        
+		        android:layout_below="@+id/player2Score"
+		        android:layout_alignParentRight="true"
+	             />
+            
+	         <Button
+		        android:id="@+id/startButton"
+		        android:background="@drawable/start_button"
+		        android:layout_width="300dp"
+		        android:layout_height="200dp"
+		        android:layout_gravity="center"
+		        android:visibility="gone"
+		        android:onClick="onStartPlayClick"
+		        
+		        android:layout_below="@+id/player1Name"
+	            android:layout_marginTop="65dp"
+	            android:layout_marginRight="20dp"
+	            android:layout_centerHorizontal="true" />
+	         
+	         <Button
+		        android:id="@+id/rematchButton"
+		        android:background="@drawable/rematch"
+		        android:layout_width="300dp"
+		        android:layout_height="200dp"
+		        android:layout_gravity="center"
+		        android:visibility="gone"
+		        android:onClick="onRematchClick"
+		        
+		        android:layout_below="@+id/player1Name"
+	            android:layout_marginTop="65dp"
+	            android:layout_marginRight="20dp"
+	            android:layout_centerHorizontal="true" />
+	         
+    	<com.orbotix.horse.SingleRobotJoystickView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/singleRobotJoystick"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            android:layout_below="@+id/player1Name"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            app:edge_overlap="20dp"
+            app:puck_radius="40dp" 
+			>
+        </com.orbotix.horse.SingleRobotJoystickView>
+    
+</RelativeLayout>

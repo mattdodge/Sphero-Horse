@@ -1,0 +1,43 @@
+<resources>
+
+    <style name="EnterNameText">
+        <item name="android:layout_marginLeft">40dp</item>
+        <item name="android:layout_marginRight">40dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    
+    <style name="selectedRobotText">
+        <item name="android:textColor">#bbbbff</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    
+    <style name="selectSpheroInstructions">
+        <item name="android:textColor">#bbbbff</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    
+    <style name="nameStyle">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#bbbbff</item>
+    </style>
+    
+    <style name="gameTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#bbffbb</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+    
+    <style name="timerStyle">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+</resources>
