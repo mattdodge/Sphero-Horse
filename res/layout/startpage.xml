@@ -66,7 +66,7 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:onClick="onChooseDriverClick"
-		        android:visibility="gone"
+		        
 		        />
             
             <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -75,7 +75,7 @@
 				  android:layout_width="match_parent"
 				  android:layout_height="wrap_content"
 				  android:text="Driver: Sphero-RGB"
-				  
+				  android:visibility="gone"
 				  />
 		
 		    <Button

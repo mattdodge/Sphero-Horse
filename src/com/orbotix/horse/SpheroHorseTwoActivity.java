@@ -286,7 +286,7 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     
     private void getTargetRobot() {
     	ListView spheroList = (ListView) findViewById(R.id.spheroList);
-		if (targetRobot == null && spheroList.getCheckedItemCount() > 0) {
+		if (targetRobot == null && spheroList.getCheckedItemPosition() >= 0) {
 			Robot selectedRobot = (Robot) (spheroList.getItemAtPosition(spheroList.getCheckedItemPosition()));
     		
 			if (driverRobot == null || !selectedRobot.getName().equals(driverRobot.getName())) {
@@ -301,7 +301,7 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     
     private void getDriverRobot() {
     	ListView spheroList = (ListView) findViewById(R.id.spheroList);
-		if (driverRobot == null && spheroList.getCheckedItemCount() > 0) {
+		if (driverRobot == null && spheroList.getCheckedItemPosition() >= 0) {
 			Robot selectedRobot = (Robot) (spheroList.getItemAtPosition(spheroList.getCheckedItemPosition()));
     		
 			if (targetRobot == null || !targetRobot.getName().equals(selectedRobot.getName())) {
