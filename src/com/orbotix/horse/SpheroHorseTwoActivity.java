@@ -26,6 +26,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -55,6 +58,14 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     
     private boolean playing;
     
+    private enum ConnectedStatus {
+    	CONNECTING_DRIVER,
+    	CONNECTING_TARGET,
+    	CONNECTING_NONE
+    };
+    
+    private ConnectedStatus currentlyConnecting = ConnectedStatus.CONNECTING_NONE;
+    
     private String player1Name, player2Name;
     
     private final String 	PLAYER_START_GAME_TEXT = "%s's turn. Place the target and press start.",
@@ -70,9 +81,10 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startpage);
         
-        robotListAdapter = new ArrayAdapter<Robot>(this, R.layout.sphero_list_item, robotList);
+//        robotListAdapter = new ArrayAdapter<Robot>(this, R.layout.sphero_list_item, robotList);
+        robotListAdapter = new ArrayAdapter<Robot>(this, android.R.layout.simple_list_item_single_choice, robotList);
         ((ListView) findViewById(R.id.spheroList)).setAdapter(robotListAdapter);
-        
+
         ((EditText)findViewById(R.id.player1NameText)).addTextChangedListener(new TextWatcher(){
             public void afterTextChanged(Editable s) {
                 checkReadyToStart();
@@ -165,11 +177,23 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     	// we passed, start the next activity
     	Log.d("SpheroHorse","Connection successful!");
     	connectedRobots ++;
-    	EditText player1Name = (EditText) findViewById(R.id.player1NameText);
-    	EditText player2Name = (EditText) findViewById(R.id.player2NameText);
     	
-    	this.player1Name = player1Name.getText().toString();
-    	this.player2Name = player2Name.getText().toString();
+    	setLoadingScreenVisible(false);
+    	
+    	switch (currentlyConnecting) {
+    	case CONNECTING_DRIVER:
+			updateTextView(R.id.driverText, "Driver: "+driverRobot.getName(), R.id.choose_driver_button);
+			checkReadyToStart();
+			break;
+			
+    	case CONNECTING_TARGET:
+			updateTextView(R.id.targetText, "Target: "+targetRobot.getName(), R.id.choose_target_button);
+			checkReadyToStart();
+			break;
+    	}
+    	
+    	currentlyConnecting = ConnectedStatus.CONNECTING_NONE;
+    	
 //    	Intent i = new Intent(getApplicationContext(), SpheroHorsePlayActivity.class);
 //
 //    	i.putExtra(SpheroHorsePlayActivity.TARGET_ROBOT_INTENT_KEY, targetRobot.getUniqueId());
@@ -179,38 +203,6 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
 //    	
 //    	startActivity(i);
     	
-    	if (connectedRobots >= 2) {
-	    	setContentView(R.layout.play_game_main);
-	    	
-	        //Add the CalibrationView as a Controller
-	        CalibrationView calibrateView = (CalibrationView)findViewById(R.id.calibration);
-	        calibrateView.setRobot(driverRobot);
-	        addController(calibrateView);
-	        
-        	SingleRobotJoystickView joystick = (SingleRobotJoystickView) findViewById(R.id.singleRobotJoystick);
-	        joystick.setRobot(driverRobot);
-	        addController(joystick);
-	        
-//	        driverCollisionListener = new CollisionListener(driverRobot);
-	        targetCollisionListener = new CollisionListener(targetRobot, this);
-	        
-//	        DeviceMessenger.getInstance().addAsyncDataListener(driverRobot, driverCollisionListener);
-	        DeviceMessenger.getInstance().addAsyncDataListener(targetRobot, targetCollisionListener);
-
-			//// Now send a command to enable streaming collisions
-			//// 
-//			ConfigureCollisionDetectionCommand.sendCommand(driverRobot, ConfigureCollisionDetectionCommand.DEFAULT_DETECTION_METHOD,
-//					45, 45, 100, 100, 100);
-			ConfigureCollisionDetectionCommand.sendCommand(targetRobot, ConfigureCollisionDetectionCommand.DEFAULT_DETECTION_METHOD,
-					20, 20, 20, 20, 100);
-			
-	    	((TextView) findViewById(R.id.player1Name)).setText(this.player1Name);
-	    	((TextView) findViewById(R.id.player2Name)).setText(this.player2Name);
-			
-			startGame();
-    	}
-        
-
     }
     
     private void setTimer(long millis) {
@@ -233,20 +225,29 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     
     private void robotConnectedFailed(Context context, Intent intent) {
     	Log.e("SpheroHorse","Could not connect to one of the robots");
+		
     	setLoadingScreenVisible(false);
-    	connectedRobots = 0;
-		
     	showErrorConnectingToast();
-		driverRobot = null;
-		targetRobot = null;
 		
-		findViewById(R.id.choose_driver_button).setVisibility(TextView.VISIBLE);
-		findViewById(R.id.choose_target_button).setVisibility(TextView.VISIBLE);
+    	switch (currentlyConnecting) {
+    	case CONNECTING_DRIVER:
+    		RobotProvider.getDefaultProvider().removeControl(driverRobot);
+    		driverRobot = null;
+    		findViewById(R.id.choose_driver_button).setVisibility(TextView.VISIBLE);
+    		findViewById(R.id.driverText).setVisibility(TextView.GONE);
+    		break;
+    		
+    	case CONNECTING_TARGET:
+    		RobotProvider.getDefaultProvider().removeControl(targetRobot);
+    		targetRobot = null;
+    		findViewById(R.id.choose_target_button).setVisibility(TextView.VISIBLE);
+    		findViewById(R.id.targetText).setVisibility(TextView.GONE);
+    		break;
+    	}
+    	
+    	currentlyConnecting = ConnectedStatus.CONNECTING_NONE;
 		
-		findViewById(R.id.driverText).setVisibility(TextView.GONE);
-		findViewById(R.id.targetText).setVisibility(TextView.GONE);
-		
-		RobotProvider.getDefaultProvider().disconnectControlledRobots();
+//		RobotProvider.getDefaultProvider().disconnectControlledRobots();
 //		RobotProvider.getDefaultProvider().removeControl(driverRobot);
 //		RobotProvider.getDefaultProvider().removeControl(targetRobot);
 		
@@ -291,10 +292,12 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     		
 			if (driverRobot == null || !selectedRobot.getName().equals(driverRobot.getName())) {
 				targetRobot = selectedRobot;
-				RobotProvider.getDefaultProvider().control(selectedRobot);
+				currentlyConnecting = ConnectedStatus.CONNECTING_TARGET;
 				
-				updateTextView(R.id.targetText, "Target: "+targetRobot.getName(), R.id.choose_target_button);
-				checkReadyToStart();
+				RobotProvider.getDefaultProvider().control(selectedRobot);
+				RobotProvider.getDefaultProvider().connectControlledRobots();
+				
+		    	setLoadingScreenVisible(true);
 			}
     	}
     }
@@ -306,10 +309,12 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     		
 			if (targetRobot == null || !targetRobot.getName().equals(selectedRobot.getName())) {
 				driverRobot = selectedRobot;
+				currentlyConnecting = ConnectedStatus.CONNECTING_DRIVER;
+				
 				RobotProvider.getDefaultProvider().control(selectedRobot);
-	
-				updateTextView(R.id.driverText, "Driver: "+driverRobot.getName(), R.id.choose_driver_button);
-				checkReadyToStart();
+				RobotProvider.getDefaultProvider().connectControlledRobots();
+				
+				setLoadingScreenVisible(true);
 			}
     	}
     }
@@ -455,9 +460,47 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     }
     
     public void onStartClick(View v) {
-    	setLoadingScreenVisible(true);
+    	if (connectedRobots < 2) {
+    		return;
+    	}
+    	
     	hideKeyboard();
-    	RobotProvider.getDefaultProvider().connectControlledRobots();
+    	
+		EditText player1Name = (EditText) findViewById(R.id.player1NameText);
+    	EditText player2Name = (EditText) findViewById(R.id.player2NameText);
+    	
+    	this.player1Name = player1Name.getText().toString();
+    	this.player2Name = player2Name.getText().toString();
+		
+    	setContentView(R.layout.play_game_main);
+    	
+        //Add the CalibrationView as a Controller
+        CalibrationView calibrateView = (CalibrationView)findViewById(R.id.calibration);
+        calibrateView.setRobot(driverRobot);
+        addController(calibrateView);
+        
+    	SingleRobotJoystickView joystick = (SingleRobotJoystickView) findViewById(R.id.singleRobotJoystick);
+        joystick.setRobot(driverRobot);
+        addController(joystick);
+        
+//	        driverCollisionListener = new CollisionListener(driverRobot);
+        targetCollisionListener = new CollisionListener(targetRobot, this);
+        
+//	        DeviceMessenger.getInstance().addAsyncDataListener(driverRobot, driverCollisionListener);
+        DeviceMessenger.getInstance().addAsyncDataListener(targetRobot, targetCollisionListener);
+
+		//// Now send a command to enable streaming collisions
+		//// 
+//			ConfigureCollisionDetectionCommand.sendCommand(driverRobot, ConfigureCollisionDetectionCommand.DEFAULT_DETECTION_METHOD,
+//					45, 45, 100, 100, 100);
+		ConfigureCollisionDetectionCommand.sendCommand(targetRobot, ConfigureCollisionDetectionCommand.DEFAULT_DETECTION_METHOD,
+				20, 20, 20, 20, 100);
+		
+    	((TextView) findViewById(R.id.player1Name)).setText(this.player1Name);
+    	((TextView) findViewById(R.id.player2Name)).setText(this.player2Name);
+		
+		startGame();
+    	
     }
     
     private void hideKeyboard() {
@@ -468,8 +511,10 @@ public class SpheroHorseTwoActivity extends ControllerActivity {
     private void setLoadingScreenVisible(boolean visible) {
     	int visibility = visible ? View.VISIBLE : View.GONE;
     	
-    	findViewById(R.id.transparentPanel1).setVisibility(visibility);
-    	findViewById(R.id.progressBar1).setVisibility(visibility);
+    	try {
+    		findViewById(R.id.transparentPanel1).setVisibility(visibility);
+    		findViewById(R.id.progressBar1).setVisibility(visibility);
+    	} catch (NullPointerException npe) {}
     }
     
     public void onStartPlayClick(View v) {
